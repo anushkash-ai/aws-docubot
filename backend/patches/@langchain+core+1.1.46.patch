@@ -1,0 +1,17 @@
+diff --git a/node_modules/@langchain/core/dist/utils/uuid/index.cjs b/node_modules/@langchain/core/dist/utils/uuid/index.cjs
+index 12fc951..385a7cf 100644
+--- a/node_modules/@langchain/core/dist/utils/uuid/index.cjs
++++ b/node_modules/@langchain/core/dist/utils/uuid/index.cjs
+@@ -34,9 +34,9 @@ Object.defineProperty(exports, "uuid_exports", {
+ 		return uuid_exports;
+ 	}
+ });
+-exports.v1 = require_v1;
+-exports.v4 = require_v4;
+-exports.v5 = require_v5;
++exports.v1 = require_v1.default || require_v1;
++exports.v4 = require_v4.default || require_v4;
++exports.v5 = require_v5.default || require_v5;
+ exports.v7 = require_v7;
+ exports.validate = require_validate;
+ exports.version = require_version;

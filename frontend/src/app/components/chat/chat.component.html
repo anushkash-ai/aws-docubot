@@ -1,0 +1,184 @@
+<!-- Model switch toast -->
+<div class="model-toast" [class.visible]="modelToast.visible" role="status" aria-live="polite">
+  <span class="model-toast-icon">{{ modelToast.model === 'gemini' ? '✦' : '◆' }}</span>
+  <span class="model-toast-text">
+    Switched to <strong>{{ modelLabels[modelToast.model] }}</strong>
+  </span>
+</div>
+
+<!-- Action toast (export, errors, etc.) -->
+<div class="action-toast" [class.visible]="toast.visible" [attr.data-kind]="toast.kind" role="status" aria-live="polite">
+  <span class="action-toast-icon" aria-hidden="true">
+    <svg *ngIf="toast.kind === 'success'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="9" fill="#10b981"/>
+      <path d="M6 10.25l2.5 2.5L14 7.5" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <svg *ngIf="toast.kind === 'error'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="9" fill="#ef4444"/>
+      <path d="M7 7l6 6M13 7l-6 6" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    <svg *ngIf="toast.kind === 'info'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="9" fill="#3b82f6"/>
+      <path d="M10 9v5M10 6.5v.5" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </span>
+  <span class="action-toast-body">
+    <span class="action-toast-title">{{ toast.title }}</span>
+    <span class="action-toast-sub" *ngIf="toast.subtitle">{{ toast.subtitle }}</span>
+  </span>
+</div>
+
+<div class="chat-topbar">
+  <span class="topbar-title">AWS DocuBot</span>
+
+  <!-- Model Selector -->
+  <div class="model-selector">
+    <button
+      class="model-btn"
+      [class.active]="chatService.selectedModel === 'gemini'"
+      (click)="selectModel('gemini')"
+      title="Google Gemini 2.5 Flash (Free)">
+      <span class="model-icon">✦</span> Gemini
+    </button>
+    <button
+      class="model-btn"
+      [class.active]="chatService.selectedModel === 'claude'"
+      (click)="selectModel('claude')"
+      title="Anthropic Claude Sonnet">
+      <span class="model-icon">◆</span> Claude
+    </button>
+  </div>
+
+  <div class="topbar-right">
+    <button
+      type="button"
+      class="theme-toggle"
+      (click)="toggleTheme()"
+      [title]="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+      <svg *ngIf="theme === 'light'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M14.5 12.5A6 6 0 0 1 7.5 5.5a6 6 0 1 0 7 7Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <svg *ngIf="theme === 'dark'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="3.4" stroke="currentColor" stroke-width="1.4" fill="none"/>
+        <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <path d="M10 2.5v2"/><path d="M10 15.5v2"/>
+          <path d="M2.5 10h2"/><path d="M15.5 10h2"/>
+          <path d="M4.6 4.6l1.4 1.4"/><path d="M14 14l1.4 1.4"/>
+          <path d="M4.6 15.4l1.4-1.4"/><path d="M14 6l1.4-1.4"/>
+        </g>
+      </svg>
+    </button>
+    <button
+      type="button"
+      class="export-btn"
+      (click)="exportToWord()"
+      [disabled]="!messages.length || isExporting"
+      [title]="messages.length ? 'Save this conversation as a Word (.docx) document' : 'Send a message first to enable export'">
+      <span class="export-doc-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
+          <!-- Page shape with folded corner -->
+          <path d="M4 2.25h7.5L16 6.75v10A1.25 1.25 0 0 1 14.75 18H4A1.25 1.25 0 0 1 2.75 16.75V3.5A1.25 1.25 0 0 1 4 2.25Z"
+                fill="#ffffff" stroke="#2b579a" stroke-width="1.2" stroke-linejoin="round" />
+          <path d="M11.5 2.25V6.75H16" stroke="#2b579a" stroke-width="1.2" stroke-linejoin="round" fill="none" />
+          <!-- Word "W" mark -->
+          <text x="9.25" y="14.25" text-anchor="middle"
+                font-family="'Segoe UI', system-ui, sans-serif"
+                font-size="6.25" font-weight="700" fill="#2b579a" letter-spacing="-0.3">W</text>
+        </svg>
+      </span>
+      <span class="export-label">
+        <span class="export-label-main">{{ isExporting ? 'Exporting…' : 'Save chat' }}</span>
+        <span class="export-label-sub">{{ isExporting ? 'Building .docx' : 'as Word (.docx)' }}</span>
+      </span>
+    </button>
+    <span class="topbar-meta">RAG &nbsp;•&nbsp; LangGraph &nbsp;•&nbsp; AWS Bedrock</span>
+  </div>
+</div>
+
+<!-- Messages Area -->
+<div class="messages" #messageContainer>
+
+  <!-- Welcome screen -->
+  <div *ngIf="messages.length === 0" class="welcome">
+    <h1><span class="greeting">Hello, I'm</span>&nbsp;<span class="highlight">AWS DocuBot</span></h1>
+    <p>Your AI assistant for AWS documentation. Ask questions, compare services, and get recommendations powered by RAG and agentic workflows.</p>
+
+    <div class="quick-actions">
+      <div class="action-card" (click)="askSuggestion('What is AWS Lambda and when should I use it?')">
+        <div class="action-icon" style="background: #fff8ec;">&#955;</div>
+        <div class="action-title">Lambda overview</div>
+        <div class="action-desc">Understand serverless compute and its use cases</div>
+        <span class="action-link">ASK NOW</span>
+      </div>
+
+      <div class="action-card" (click)="askSuggestion('Compare S3 and SQS - when should I use each one?')">
+        <div class="action-icon" style="background: #eef9f3;">&#8644;</div>
+        <div class="action-title">Compare services</div>
+        <div class="action-desc">S3 vs SQS — understand the differences</div>
+        <span class="action-link">COMPARE</span>
+      </div>
+
+      <div class="action-card" (click)="askSuggestion('I need to orchestrate multiple Lambda functions in a workflow. What AWS service should I use?')">
+        <div class="action-icon" style="background: #eef4ff;">&#9881;</div>
+        <div class="action-title">Service recommendation</div>
+        <div class="action-desc">Get the right AWS service for your use case</div>
+        <span class="action-link">SUGGEST</span>
+      </div>
+
+      <div class="action-card" (click)="askSuggestion('What is Amazon Bedrock and how do I get started?')">
+        <div class="action-icon" style="background: #f5f0ff;">&#9672;</div>
+        <div class="action-title">Bedrock basics</div>
+        <div class="action-desc">Learn about AWS's managed AI service</div>
+        <span class="action-link">EXPLORE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat messages -->
+  <app-message *ngFor="let msg of messages; let last = last"
+               [message]="msg"
+               [liveStatus]="last && msg.isLoading ? streamingStatus : ''"
+               (codeCopied)="onCodeCopied()"
+               (followUpClicked)="askSuggestion($event)"></app-message>
+</div>
+
+<!-- Input Area -->
+<div class="input-wrapper">
+  <div class="input-area">
+    <label class="think-toggle">
+      <span class="think-switch-wrap">
+        <input type="checkbox" [ngModel]="thinkMode" (ngModelChange)="onThinkModeChange($event)" class="think-input" />
+        <span class="think-track" aria-hidden="true"><span class="think-thumb"></span></span>
+      </span>
+      <span class="think-label">THINK</span>
+    </label>
+    <textarea
+      [(ngModel)]="userInput"
+      (keydown)="onKeyDown($event)"
+      placeholder="Ask about AWS services, compare options, or get recommendations..."
+      [disabled]="isLoading"
+      rows="1">
+    </textarea>
+    <button *ngIf="!isLoading"
+            type="button"
+            class="send-btn"
+            (click)="sendMessage()"
+            [disabled]="!userInput.trim()"
+            title="Send">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M3.5 10L17 3.5L11 17L9.25 11.25L3.5 10Z" fill="#ffffff"/>
+      </svg>
+    </button>
+    <button *ngIf="isLoading"
+            type="button"
+            class="stop-btn"
+            (click)="stopGeneration()"
+            title="Stop generation">
+      <span class="stop-mark" aria-hidden="true"></span>
+    </button>
+  </div>
+  <div class="input-footer">
+    Using <strong>{{ chatService.selectedModel === 'gemini' ? 'Gemini 2.5 Flash' : 'Claude Sonnet' }}</strong>
+    &nbsp;•&nbsp; Responses grounded in official AWS documentation via RAG
+  </div>
+</div>

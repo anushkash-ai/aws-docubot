@@ -1,0 +1,174 @@
+<div class="sidebar-header">
+  <div class="brand">
+    <div class="brand-icon" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+        <line x1="12" y1="2" x2="12" y2="5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+        <circle cx="12" cy="1.5" r="1.2" fill="#ffffff" />
+        <rect x="5" y="5" width="14" height="11" rx="4" fill="#f9fafb" />
+        <rect x="7" y="8" width="10" height="5" rx="2" fill="#1a2421" />
+        <circle cx="9.5" cy="10.5" r="1" fill="#6ee7b7" />
+        <circle cx="14.5" cy="10.5" r="1" fill="#6ee7b7" />
+        <rect x="7" y="16" width="10" height="6" rx="2" fill="#e5e7eb" />
+      </svg>
+    </div>
+    <div class="brand-text">
+      <span class="brand-name">AWS DocuBot</span>
+      <span class="brand-sub">Documentation Assistant</span>
+    </div>
+  </div>
+
+  <button class="new-chat-btn" (click)="onNewChat()">
+    <span class="plus">+</span> New conversation
+  </button>
+</div>
+
+<!-- Chat History -->
+<div class="section history-section">
+  <div class="section-label">Recent Chats</div>
+
+  <div *ngIf="sessions.length === 0" class="no-sessions">
+    No conversations yet
+  </div>
+
+  <div class="sessions-list">
+    <div
+      *ngFor="let session of sessions"
+      class="session-item"
+      [class.active]="session.session_id === chatService.sessionId"
+      (click)="onLoadSession(session)"
+      title="{{ session.title }}">
+      <div class="session-icon">
+        <span *ngIf="session.model === 'claude'">◆</span>
+        <span *ngIf="session.model !== 'claude'">✦</span>
+      </div>
+      <div class="session-body">
+        <div class="session-title">{{ session.title }}</div>
+        <div class="session-meta">
+          <span class="session-model">{{ getModelLabel(session.model) }}</span>
+          <span class="session-dot">·</span>
+          <span class="session-time">{{ getRelativeTime(session.updated_at) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Indexed Services -->
+<div class="section">
+  <div class="section-label">Indexed Services</div>
+  <div class="services-list">
+    <div *ngFor="let svc of services" class="service-item">
+      <div
+        class="service-badge"
+        [class.badge-symbol]="svc.icon === 'λ'"
+        [style.background]="svc.color"
+        [style.color]="svc.iconColor || '#ffffff'">{{ svc.icon }}</div>
+      <span class="service-name">{{ svc.name }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="sidebar-footer">
+  <div class="tech-stack">
+    <span class="tech-pill">LangGraph</span>
+    <span class="tech-pill">AWS Bedrock</span>
+    <span class="tech-pill">Angular 16</span>
+  </div>
+  <div class="status-row">
+    <span class="status-dot"></span>
+    <span class="status-text">Agent online</span>
+    <button class="about-btn" (click)="showAbout = true" title="About this app">ℹ</button>
+  </div>
+</div>
+
+<!-- ── About Modal ─────────────────────────────────────────────────── -->
+<div class="about-overlay" *ngIf="showAbout" (click)="showAbout = false">
+  <div class="about-modal" (click)="$event.stopPropagation()">
+
+    <button class="about-close" (click)="showAbout = false">✕</button>
+
+    <!-- Creator -->
+    <div class="about-avatar">
+      <img src="assets/anushka.jpg" alt="Anushka Sharma" class="about-avatar-img" />
+    </div>
+    <h2 class="about-name">Anushka Sharma</h2>
+    <p class="about-role">Senior AI Engineer</p>
+
+    <div class="about-divider"></div>
+
+    <!-- App Description -->
+    <p class="about-desc">
+      Built an <strong>Agentic RAG Chatbot</strong> that lets users interact
+      with official AWS documentation using natural language — powered by
+      LangGraph's autonomous agent loop.
+    </p>
+
+    <div class="about-divider"></div>
+
+    <!-- Tech Stack -->
+    <div class="about-section-label">Tech Stack</div>
+    <div class="about-tech-grid">
+      <div class="about-tech-item">
+        <span class="about-tech-icon" style="background:#4f46e5">LG</span>
+        <div>
+          <div class="about-tech-name">LangGraph.js</div>
+          <div class="about-tech-desc">Agent state machine & tool loop</div>
+        </div>
+      </div>
+      <div class="about-tech-item">
+        <span class="about-tech-icon" style="background:#f97316">AWS</span>
+        <div>
+          <div class="about-tech-name">AWS Bedrock</div>
+          <div class="about-tech-desc">Titan V2 embeddings for RAG</div>
+        </div>
+      </div>
+      <div class="about-tech-item">
+        <span class="about-tech-icon" style="background:#1a73e8">G</span>
+        <div>
+          <div class="about-tech-name">Gemini 2.5 Flash</div>
+          <div class="about-tech-desc">Free-tier LLM (Google AI)</div>
+        </div>
+      </div>
+      <div class="about-tech-item">
+        <span class="about-tech-icon" style="background:#d97706">◆</span>
+        <div>
+          <div class="about-tech-name">Claude Sonnet</div>
+          <div class="about-tech-desc">Anthropic LLM (paid)</div>
+        </div>
+      </div>
+      <div class="about-tech-item">
+        <span class="about-tech-icon" style="background:#dd0031">NG</span>
+        <div>
+          <div class="about-tech-name">Angular 16</div>
+          <div class="about-tech-desc">Frontend framework</div>
+        </div>
+      </div>
+      <div class="about-tech-item">
+        <span class="about-tech-icon" style="background:#3c873a">JS</span>
+        <div>
+          <div class="about-tech-name">Node.js + Express</div>
+          <div class="about-tech-desc">REST API backend</div>
+        </div>
+      </div>
+      <div class="about-tech-item">
+        <span class="about-tech-icon" style="background:#0f7b6c">DB</span>
+        <div>
+          <div class="about-tech-name">SQLite</div>
+          <div class="about-tech-desc">Local session persistence</div>
+        </div>
+      </div>
+      <div class="about-tech-item">
+        <span class="about-tech-icon" style="background:#6366f1">RAG</span>
+        <div>
+          <div class="about-tech-name">RAG Pipeline</div>
+          <div class="about-tech-desc">157 chunks from 9 AWS docs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-divider"></div>
+
+    <div class="about-footer">Built for AllCloud · May 2026</div>
+  </div>
+</div>

@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'highlight.js/styles/github.css';
+
+/* ── Theme tokens (light is default) ──────────────────────────────── */
+:root,
+[data-theme='light'] {
+  --bg:                #f7f8fa;
+  --surface:           #ffffff;
+  --surface-soft:      #f3f4f6;
+  --surface-softer:    #f0f2f5;
+  --border:            #e5e7eb;
+  --border-strong:     #d1d5db;
+  --text:              #111827;
+  --text-soft:         #374151;
+  --text-muted:        #6b7280;
+  --text-subtle:       #9ca3af;
+  --accent:            #6ee7b7;
+  --accent-soft:       #ecfdf5;
+  --accent-strong:     #047857;
+  --user-bubble-bg:    #1a2421;
+  --user-bubble-text:  #f3f4f6;
+  --ai-bubble-bg:      #ffffff;
+  --ai-bubble-text:    #111827;
+  --code-bg:           #f7f8fa;
+  --code-header-bg:    #f0f2f5;
+  --inline-code-bg:    #f0f2f5;
+  --inline-code-text:  #3d8f6a;
+  --shadow-soft:       0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md:         0 4px 14px rgba(0, 0, 0, 0.06);
+  --scrollbar-thumb:   #d0d5dd;
+}
+
+[data-theme='dark'] {
+  --bg:                #0f1115;
+  --surface:           #1a1d23;
+  --surface-soft:      #20242c;
+  --surface-softer:    #262b34;
+  --border:            #2d333d;
+  --border-strong:     #3a414c;
+  --text:              #f3f4f6;
+  --text-soft:         #d1d5db;
+  --text-muted:        #9ca3af;
+  --text-subtle:       #6b7280;
+  --accent:            #6ee7b7;
+  --accent-soft:       #1e3a32;
+  --accent-strong:     #6ee7b7;
+  --user-bubble-bg:    #2d8467;
+  --user-bubble-text:  #f0fdf4;
+  --ai-bubble-bg:      #1a1d23;
+  --ai-bubble-text:    #f3f4f6;
+  --code-bg:           #15171c;
+  --code-header-bg:    #1f232b;
+  --inline-code-bg:    #20242c;
+  --inline-code-text:  #6ee7b7;
+  --shadow-soft:       0 1px 3px rgba(0, 0, 0, 0.6);
+  --shadow-md:         0 4px 14px rgba(0, 0, 0, 0.4);
+  --scrollbar-thumb:   #3a414c;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+/* ── Dark-mode override for highlight.js github theme ─────────────── */
+[data-theme='dark'] .hljs {
+  background: transparent;
+  color: #c9d1d9;
+}
+[data-theme='dark'] .hljs-keyword,
+[data-theme='dark'] .hljs-selector-tag,
+[data-theme='dark'] .hljs-built_in { color: #ff7b72; }
+[data-theme='dark'] .hljs-string,
+[data-theme='dark'] .hljs-doctag { color: #a5d6ff; }
+[data-theme='dark'] .hljs-title,
+[data-theme='dark'] .hljs-section,
+[data-theme='dark'] .hljs-name,
+[data-theme='dark'] .hljs-attribute { color: #d2a8ff; }
+[data-theme='dark'] .hljs-number,
+[data-theme='dark'] .hljs-literal { color: #79c0ff; }
+[data-theme='dark'] .hljs-comment,
+[data-theme='dark'] .hljs-meta { color: #8b949e; }
+[data-theme='dark'] .hljs-variable,
+[data-theme='dark'] .hljs-template-variable { color: #ffa657; }
+
+/* ── Fenced code blocks rendered by MarkdownPipe ─────────────────────
+   These selectors live globally because Angular's emulated style
+   encapsulation does not apply to content injected via [innerHTML]. */
+.markdown-body .code-block {
+  margin: 10px 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--code-bg);
+
+  .code-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px 6px 14px;
+    background: var(--code-header-bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-block-lang {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .code-block-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    font-family: inherit;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .code-block-copy svg { width: 13px; height: 13px; display: block; }
+  .code-block-copy:hover {
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .code-block-copy.copied {
+    color: var(--accent-strong);
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  pre {
+    margin: 0;
+    padding: 12px 14px;
+    overflow-x: auto;
+    background: transparent;
+    border: none;
+  }
+
+  pre code,
+  pre code.hljs {
+    background: transparent;
+    padding: 0;
+    color: var(--text-soft);
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+}

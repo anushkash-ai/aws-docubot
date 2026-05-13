@@ -1,0 +1,11 @@
+<div class="app-layout">
+  <app-sidebar
+    #sidebarComponent
+    (newChat)="onNewChat()"
+    (loadSession)="onLoadSession($event)">
+  </app-sidebar>
+  <app-chat
+    #chatComponent
+    (messageSent)="onMessageSent()">
+  </app-chat>
+</div>

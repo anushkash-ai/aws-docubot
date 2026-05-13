@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Navy rounded background -->
+  <rect width="32" height="32" rx="7" fill="#0f1f5c"/>
+
+  <!-- Robot head (white helmet) -->
+  <ellipse cx="16" cy="13" rx="8" ry="7.5" fill="#e8eaf0"/>
+
+  <!-- Helmet visor (dark) -->
+  <ellipse cx="16" cy="13.5" rx="5.5" ry="4.5" fill="#111827"/>
+
+  <!-- Glowing eyes -->
+  <ellipse cx="13.5" cy="13" rx="1.4" ry="1.8" fill="#f59e0b"/>
+  <ellipse cx="18.5" cy="13" rx="1.4" ry="1.8" fill="#f59e0b"/>
+
+  <!-- Smile -->
+  <path d="M13.5 16.5 Q16 18.5 18.5 16.5" fill="none" stroke="#f59e0b" stroke-width="0.8" stroke-linecap="round"/>
+
+  <!-- Orange helmet band -->
+  <path d="M8 13 Q8 5.5 16 5.5 Q24 5.5 24 13" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Antenna -->
+  <line x1="16" y1="5.5" x2="16" y2="2.5" stroke="#f59e0b" stroke-width="1.2" stroke-linecap="round"/>
+  <circle cx="16" cy="2" r="1.2" fill="#f59e0b"/>
+
+  <!-- Body -->
+  <rect x="10" y="21" width="12" height="7" rx="3" fill="#1e3a8a"/>
+
+  <!-- AWS smile arrow on body -->
+  <path d="M12.5 25.5 Q16 27.5 19.5 25.5" fill="none" stroke="#f59e0b" stroke-width="1" stroke-linecap="round"/>
+
+  <!-- Shoulders -->
+  <ellipse cx="9" cy="22.5" rx="2.5" ry="2" fill="#e8eaf0"/>
+  <ellipse cx="23" cy="22.5" rx="2.5" ry="2" fill="#e8eaf0"/>
+
+  <!-- Orange collar -->
+  <rect x="10" y="20" width="12" height="2.5" rx="1.2" fill="#f59e0b"/>
+</svg>
